@@ -1,14 +1,13 @@
 # Deploy Service With Git Hook
 
-## Login to the deploy server, create a user account (eg: www)
-    user add www
-
 ## Create ssh public key from PC (or CI server) if ~/.ssh/id_rsa.pub doesn't exist
 
     cd ~/.ssh
     ssh-keygen
 
-## Copy ssh ~/.ssh/id_rsa.pub from PC (or CI server) to deploy-server
+## Create user account (eg www, the service will run as the user) and copy client's public key
+
+    user add www
 
     cd /home/www
     mkdir .ssh 
@@ -16,20 +15,16 @@
     touch authorized_keys
     chmod 700 ~/.ssh
     chmod 600 ~/.ssh/authorized_keys
-    (copy client ~/.ssh/id_rsa.pub string to authorized_keys)     
+    (copy client ~/.ssh/id_rsa.pub string to authorized_keys)   
 
-## Test ssh connection
+    (test connection from client: ssh www@deploy-server-ip)
 
-    ssh www@deploy-server-ip
-
-## Init an empty git repository in deploy server
+## Config git repository in deploy server
 
     mkdir ~/git
     cd ~/git
     git init --bare ./project.git
     git clone ./project.git
-
-## Create post-receive git hook in deploy server
 
     vi ~/git/project.git/post-receive
     (add hook script...)
@@ -101,16 +96,16 @@
     git commit -m "commit message"
     git push origin master
 
-* Run **make deploy** if having a makefile like below 
+### Makefile to automate the deploy work (make deploy)  
 
-        .PHONY: deploy
+    .PHONY: deploy
 
-        BUILD_DIR = $(ROOT_DIR)/build
-        DEPLOY_GIT_WORK_DIR = $(HOME)/git/project
-        CURR_TIME = $(shell date +"%Y-%m-%d %H:%M:%S")
-        HOST_NAME = $(shell hostname)
+    BUILD_DIR = $(ROOT_DIR)/build
+    DEPLOY_GIT_WORK_DIR = $(HOME)/git/project
+    CURR_TIME = $(shell date +"%Y-%m-%d %H:%M:%S")
+    HOST_NAME = $(shell hostname)
 
-        deploy:
-            cd $(DEPLOY_GIT_WORK_DIR) && git pull
-            cp -rf $(BUILD_DIR)/myapp $(DEPLOY_GIT_WORK_DIR)
-            cd $(DEPLOY_GIT_WORK_DIR) && git add . && git commit -m "From $(HOST_NAME) auto deploy at: $(CURR_TIME)" && git push origin master
+    deploy:
+        cd $(DEPLOY_GIT_WORK_DIR) && git pull
+        cp -rf $(BUILD_DIR)/myapp $(DEPLOY_GIT_WORK_DIR)
+        cd $(DEPLOY_GIT_WORK_DIR) && git add . && git commit -m "From $(HOST_NAME) auto deploy at: $(CURR_TIME)" && git push origin master
