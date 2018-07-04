@@ -97,16 +97,23 @@
     git commit -m "commit message"
     git push origin master
 
-### Makefile to automate the deploy work (make deploy)  
+### Use makefile to automate deploy work
 
-    .PHONY: deploy
+* make file content
 
-    BUILD_DIR = $(ROOT_DIR)/build
-    DEPLOY_GIT_WORK_DIR = $(HOME)/git/project
-    CURR_TIME = $(shell date +"%Y-%m-%d %H:%M:%S")
-    HOST_NAME = $(shell hostname)
+        .PHONY: deploy
 
-    deploy:
-        cd $(DEPLOY_GIT_WORK_DIR) && git pull
-        cp -rf $(BUILD_DIR)/myapp $(DEPLOY_GIT_WORK_DIR)
-        cd $(DEPLOY_GIT_WORK_DIR) && git add . && git commit -m "From $(HOST_NAME) auto deploy at: $(CURR_TIME)" && git push origin master
+        BUILD_DIR = $(ROOT_DIR)/build
+        DEPLOY_GIT_WORK_DIR = $(HOME)/git/project
+        CURR_TIME = $(shell date +"%Y-%m-%d %H:%M:%S")
+        HOST_NAME = $(shell hostname)
+
+        deploy:
+            cd $(DEPLOY_GIT_WORK_DIR) && git pull
+            cp -rf $(BUILD_DIR)/myapp $(DEPLOY_GIT_WORK_DIR)
+            cd $(DEPLOY_GIT_WORK_DIR) && git add . && git commit -m "From $(HOST_NAME) auto deploy at: $(CURR_TIME)" && git push origin master
+            
+* make file usage
+
+        make deploy
+        
