@@ -93,6 +93,7 @@
     git clone www@deploy-server-ip:/home/www/git/project.git
     cd ./project
     (cp files to ./project)
+    git add .
     git commit -m "commit message"
     git push origin master
 
