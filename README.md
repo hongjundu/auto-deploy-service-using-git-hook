@@ -1,4 +1,4 @@
-# Deploy Service With Git Hook
+# Auto deploy service using git hook
 
 ## Create ssh public key from PC (or CI server) if ~/.ssh/id_rsa.pub doesn't exist
 
